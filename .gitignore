@@ -1,33 +1,43 @@
-# === GLOBAL IGNORE ===
+# Compiled class files
+*.class
+
+# Log files
 *.log
-*.tmp
-*.swp
-*.swo
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# IntelliJ
+*.iml
+.idea/
+out/
+
+# Eclipse
+*.classpath
+*.project
+*.settings/
+
+# VS Code
+.vscode/
+
+# Maven
+target/
+
+# dotenv (if used)
+.env
+
+# OS generated
 .DS_Store
 Thumbs.db
-
-# === REACT FRONTEND ===
-client/node_modules/
-client/.env
-client/build/
-client/.DS_Store
-client/npm-debug.log
-client/yarn-debug.log
-client/yarn-error.log
-
-# === SPRING BOOT BACKEND ===
-server/target/
-server/.classpath
-server/.project
-server/.settings/
-server/.env
-server/*.iml
-server/.idea/
-
-# === OS/IDE ===
-.vscode/
-.idea/
-*.iml
-
-# === TEST COVERAGE ===
-coverage/
