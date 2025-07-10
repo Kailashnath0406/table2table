@@ -1,7 +1,7 @@
 package com.table2table.service;
 
-import com.table2table.dto.LoginRequest;
-import com.table2table.dto.RegisterRequest;
+import com.table2table.dto.LoginRequestDto;
+import com.table2table.dto.RegisterRequestDto;
 import com.table2table.model.User;
 import com.table2table.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public String register(RegisterRequest request) {
+    public String register(RegisterRequestDto request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already registered");
         }
@@ -39,7 +39,7 @@ public class UserService {
         return "User registered successfully";
     }
 
-    public ResponseEntity<String> login(LoginRequest request) {
+    public ResponseEntity<String> login(LoginRequestDto request) {
         Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
 
         if (userOptional.isEmpty()) {

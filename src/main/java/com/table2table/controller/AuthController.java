@@ -1,8 +1,8 @@
 package com.table2table.controller;
 
-import com.table2table.dto.JwtResponse;
-import com.table2table.dto.LoginRequest;
-import com.table2table.dto.RegisterRequest;
+import com.table2table.dto.JwtResponseDto;
+import com.table2table.dto.LoginRequestDto;
+import com.table2table.dto.RegisterRequestDto;
 import com.table2table.dto.UserResponseDto;
 import com.table2table.model.User;
 import com.table2table.repository.UserRepository;
@@ -40,17 +40,17 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody RegisterRequest request) {
+    public ResponseEntity<String> registerUser(@RequestBody RegisterRequestDto request) {
         String response = userService.register(request);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<JwtResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(),
-                        loginRequest.getPassword()
+                        loginRequestDto.getEmail(),
+                        loginRequestDto.getPassword()
                 )
         );
 
@@ -58,11 +58,11 @@ public class AuthController {
 
         //String token = jwtService.generateToken(loginRequest.getEmail());
 
-        User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
+        User user = userRepository.findByEmail(loginRequestDto.getEmail()).orElseThrow();
 
         String token = jwtService.generateToken(user);
 
-        return ResponseEntity.ok(new JwtResponse(token, user.getEmail(), user.getRole()));
+        return ResponseEntity.ok(new JwtResponseDto(token, user.getEmail(), user.getRole()));
     }
 
     @GetMapping("/profile")

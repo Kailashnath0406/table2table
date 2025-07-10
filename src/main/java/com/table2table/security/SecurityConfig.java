@@ -2,6 +2,7 @@ package com.table2table.security;
 
 import com.table2table.repository.UserRepository;
 import com.table2table.service.CustomUserDetailsService;
+import com.table2table.util.CommunityManagementUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,8 +52,8 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-  /*  @Bean
-    public UserDetailsService userDetailsService() {
-        return new CustomUserDetailsService(userRepository); // if you need manual injection
-    }*/
+    @Bean
+    public CommunityManagementUtil communityManagementUtil() {
+        return new CommunityManagementUtil();
+    }
 }

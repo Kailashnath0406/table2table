@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-public class CustomUserDetails implements UserDetails {
+public class CustomUserDetailsDto implements UserDetails {
 
     private  User user; // your entity
 
@@ -16,7 +16,7 @@ public class CustomUserDetails implements UserDetails {
         return user;
     }
 
-    public CustomUserDetails(User user) {
+    public CustomUserDetailsDto(User user) {
         this.user = user;
     }
 
