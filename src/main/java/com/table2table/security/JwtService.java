@@ -1,30 +1,47 @@
 package com.table2table.security;
 
+import com.table2table.model.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 @Service
 public class JwtService {
 
-    private final String SECRET_KEY = "your-256-bit-secret-your-256-bit-secret"; // use 256-bit key
+    @Value("${jwt.secret}")
+    private String SECRET_KEY;
 
+    // Used to sign the JWT
     private Key getSignInKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
-    public String generateToken(String username) {
+    // === Generate JWT Token with email & role ===
+    public String generateToken(User user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", user.getRole()); // ✅ Embed role
+        return buildToken(claims, user.getEmail());
+    }
+
+    // === Build Token Internally ===
+    private String buildToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
-                .setSubject(username)
+                .setClaims(claims)
+                .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) // 30 min
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
+    // === Extract Username (Email) from Token ===
     public String extractUsername(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignInKey())
@@ -34,6 +51,7 @@ public class JwtService {
                 .getSubject();
     }
 
+    // === Token Validity Check ===
     public boolean isTokenValid(String token, String username) {
         final String extractedUsername = extractUsername(token);
         return extractedUsername.equals(username) && !isTokenExpired(token);
@@ -47,5 +65,29 @@ public class JwtService {
                 .getBody()
                 .getExpiration()
                 .before(new Date());
+    }
+
+
+    // === Extract Role ===
+    public String extractRole(String token) {
+        return extractAllClaims(token).get("role", String.class);
+    }
+
+    private Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
+
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }

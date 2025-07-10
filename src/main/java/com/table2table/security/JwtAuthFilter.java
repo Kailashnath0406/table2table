@@ -1,5 +1,6 @@
 package com.table2table.security;
 
+import com.table2table.dto.CustomUserDetails;
 import com.table2table.service.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -41,7 +42,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         username = jwtService.extractUsername(jwt);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            CustomUserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            System.out.println("Granted Authorities: " + userDetails.getAuthorities());
             if (jwtService.isTokenValid(jwt, userDetails.getUsername())) {
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
