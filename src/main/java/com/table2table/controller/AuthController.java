@@ -3,11 +3,12 @@ package com.table2table.controller;
 import com.table2table.dto.JwtResponse;
 import com.table2table.dto.LoginRequest;
 import com.table2table.dto.RegisterRequest;
+import com.table2table.dto.UserResponseDto;
 import com.table2table.model.User;
 import com.table2table.repository.UserRepository;
 import com.table2table.security.JwtService;
 import com.table2table.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.table2table.util.UserManagementUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -69,8 +70,9 @@ public class AuthController {
         // Fetch user from database using email
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
+        UserResponseDto userResponse = UserManagementUtil.convertToDto(user);
 
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userResponse);
     }
 }
 
