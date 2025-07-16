@@ -25,7 +25,7 @@ public class User {
     private String role;  // COOK, CUSTOMER, ADMIN
 
     // Relationships
-    @OneToMany(mappedBy = "postedBy", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<FoodPost> foodPosts;
 
     @OneToMany(mappedBy = "requestedBy", cascade = CascadeType.ALL)
