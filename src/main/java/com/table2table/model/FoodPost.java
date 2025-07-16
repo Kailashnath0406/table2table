@@ -1,5 +1,6 @@
 package com.table2table.model;
 
+import com.table2table.model.enums.FoodStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -19,13 +20,20 @@ public class FoodPost {
 
     private String title;
     private String description;
+    private Double price;
     private Integer quantity;
     private LocalDateTime expiresAt;
-    private String status; // ACTIVE, EXPIRED, CLAIMED
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private FoodStatus status; // ACTIVE, EXPIRED, CLAIMED
+
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @ManyToOne
-    @JoinColumn(name = "posted_by")
-    private User postedBy;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToMany(mappedBy = "foodPost", cascade = CascadeType.ALL)
     private List<FoodRequest> requests;
