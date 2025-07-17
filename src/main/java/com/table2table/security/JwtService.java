@@ -27,6 +27,7 @@ public class JwtService {
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getRole()); // ✅ Embed role
+        claims.put("userId", user.getId()); // ✅ Embed Id
         return buildToken(claims, user.getEmail());
     }
 
@@ -89,5 +90,27 @@ public class JwtService {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public Long extractUserId(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("Invalid Authorization header");
+        }
+
+        String token = authHeader.substring(7); // Remove "Bearer "
+        Claims claims = Jwts.parser()
+                .setSigningKey(getSignInKey())
+                .parseClaimsJws(token)
+                .getBody();
+
+        Object userIdClaim = claims.get("userId");
+
+        if (userIdClaim instanceof Integer) {
+            return ((Integer) userIdClaim).longValue();
+        } else if (userIdClaim instanceof Long) {
+            return (Long) userIdClaim;
+        } else {
+            throw new IllegalArgumentException("Invalid userId in token");
+        }
     }
 }
