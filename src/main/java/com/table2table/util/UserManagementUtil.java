@@ -1,6 +1,8 @@
 package com.table2table.util;
 
+import com.table2table.dto.FoodPostResponse;
 import com.table2table.dto.UserResponseDto;
+import com.table2table.model.FoodPost;
 import com.table2table.model.User;
 
 import java.util.List;
@@ -25,4 +27,22 @@ public class UserManagementUtil {
                 .map(UserManagementUtil::convertToDto)
                 .collect(Collectors.toList());
     }
+
+    public static FoodPostResponse convertToFoodPostDto(FoodPost foodPost) {
+        FoodPostResponse dto = new FoodPostResponse();
+        dto.setId(foodPost.getId());
+        dto.setTitle(foodPost.getTitle());
+        dto.setDescription(foodPost.getDescription());
+        dto.setPrice(foodPost.getPrice());
+        dto.setQuantity(foodPost.getQuantity());
+        dto.setExpiresAt(foodPost.getExpiresAt());
+        dto.setImageUrl(foodPost.getImageUrl());
+        dto.setStatus(foodPost.getStatus());
+
+        // Assuming postedBy is a User and you want to show the user's name or email
+        dto.setPostedBy(foodPost.getUser().getName()); // or .getEmail()
+
+        return dto;
+    }
+
 }
